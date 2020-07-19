@@ -120,6 +120,9 @@ extension FileManager {
             
             let path = preferredEncoding == nil ? entry.path : entry.path(using: preferredEncoding!)
             let destinationEntryURL = destinationURL.appendingPathComponent(path)
+
+                        print("unzip entry to \(destinationEntryURL.path)")
+
             guard destinationEntryURL.isContained(in: destinationURL) else {
                 throw CocoaError(.fileReadInvalidFileName,
                                  userInfo: [NSFilePathErrorKey: destinationEntryURL.path])
