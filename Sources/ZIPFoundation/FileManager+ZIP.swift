@@ -115,6 +115,9 @@ extension FileManager {
         }
 
         for entry in sortedEntries {
+            
+            print("unzip entry \(entry.path)")
+            
             let path = preferredEncoding == nil ? entry.path : entry.path(using: preferredEncoding!)
             let destinationEntryURL = destinationURL.appendingPathComponent(path)
             guard destinationEntryURL.isContained(in: destinationURL) else {
