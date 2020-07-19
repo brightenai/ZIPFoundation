@@ -116,12 +116,12 @@ extension FileManager {
 
         for entry in sortedEntries {
             
-            print("unzip entry \(entry.path)")
+          //  print("unzip entry \(entry.path)")
             
             let path = preferredEncoding == nil ? entry.path : entry.path(using: preferredEncoding!)
             let destinationEntryURL = destinationURL.appendingPathComponent(path)
 
-                        print("unzip entry to \(destinationEntryURL.path)")
+          //              print("unzip entry to \(destinationEntryURL.path)")
 
             guard destinationEntryURL.isContained(in: destinationURL) else {
                 throw CocoaError(.fileReadInvalidFileName,
