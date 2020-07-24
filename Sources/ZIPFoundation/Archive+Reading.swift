@@ -27,18 +27,23 @@ extension Archive {
         var checksum = CRC32(0)
         switch entry.type {
         case .file:
-            guard !fileManager.itemExists(at: url) else {
-                throw CocoaError(.fileWriteFileExists, userInfo: [NSFilePathErrorKey: url.path])
+            if fileManager.itemExists(at: url)
+            {
+                print("file exists \(url.path)")
+                //throw CocoaError(.fileWriteFileExists, userInfo: [NSFilePathErrorKey: url.path])
             }
-            try fileManager.createParentDirectoryStructure(for: url)
-            let destinationRepresentation = fileManager.fileSystemRepresentation(withPath: url.path)
-            guard let destinationFile: UnsafeMutablePointer<FILE> = fopen(destinationRepresentation, "wb+") else {
-                throw CocoaError(.fileNoSuchFile)
-            }
-            defer { fclose(destinationFile) }
-            let consumer = { _ = try Data.write(chunk: $0, to: destinationFile) }
-            checksum = try self.extract(entry, bufferSize: bufferSize, skipCRC32: skipCRC32,
+            else
+            {
+                try fileManager.createParentDirectoryStructure(for: url)
+                let destinationRepresentation = fileManager.fileSystemRepresentation(withPath: url.path)
+                guard let destinationFile: UnsafeMutablePointer<FILE> = fopen(destinationRepresentation, "wb+") else {
+                     throw CocoaError(.fileNoSuchFile)
+                 }
+                  defer { fclose(destinationFile) }
+                 let consumer = { _ = try Data.write(chunk: $0, to: destinationFile) }
+                 checksum = try self.extract(entry, bufferSize: bufferSize, skipCRC32: skipCRC32,
                                         progress: progress, consumer: consumer)
+            }
         case .directory:
             let consumer = { (_: Data) in
                 try fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
